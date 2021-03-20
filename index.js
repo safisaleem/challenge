@@ -1,6 +1,5 @@
 let mock = require('./mock')
 
-
 matchGoldToBTC = (order,cost) => {
     for(let user in mock.users){
         if(order.user != user){
@@ -16,6 +15,10 @@ matchGoldToBTC = (order,cost) => {
     console.log("Order matching failed")
 }
 
+validateBTCOrder = (user,cost) => {
+    return user.assets.crypto.btc >= cost
+}
+
 processAndMatchOrder = (order) => {
     if (order.buy.asset == "gold") {
         if (order.using === "btc") {
@@ -24,7 +27,7 @@ processAndMatchOrder = (order) => {
 
             console.log("\n\ncost...\n",cost)
 
-            if (user.assets.crypto.btc >= cost) {
+            if (validateBTCOrder(user,cost)) {
                 matchGoldToBTC(order,cost)
             } else {
                 console.log("Not Enough btc.")
@@ -32,9 +35,6 @@ processAndMatchOrder = (order) => {
         }
     }
 }
-
-
-
 
 function test() {
     let order = {
